@@ -1,0 +1,24 @@
+#This deletes the 2 extra comments after the rows
+cut -d',' -f'1,2,3,4,5,6,7,8' 'BTCAUDOrig.csv' |\
+#Checking that the data did not have any empty lines
+grep -v '^ $' |\
+#Change the word 'Infinity' to 'N/A' to indicate unknown values
+sed 's/Infinity/N\/A/g' |\
+#Delete the line numbers where date does not match the LTCBTC pair
+sed '2,228 d' |\
+#Equalize the lines of LTCBTC and BTCAUD in order to prepare a merge
+head -n+592 > btcaud.csv
+#Merging the files
+paste ltcbtc.csv btcaud.csv | cut -d',' -f'1,2,4,5,6,7,8,9,10,11' > mergeLBAUD.csv
+#Checking that the file encoding is ASCII
+file 'mergeLBAUD.csv'
+#Checking the number of rows of the file
+wc -l 'mergeLBAUD.csv'
+#Checking the number of columns of the file
+head -1 mergeLBAUD.csv | sed 's/[^,]//g' | wc -c
+#Checks the header of the file to know different columns of the data
+head -1 mergeLBAUD.csv
+#Gets the header into a new file to know the columns of the data
+head -1 mergeLBAUD.csv | tr ',' '\n' > metadata.txt
+cat metadata.txt
+#This process has now cleaned and verified that the data is valid

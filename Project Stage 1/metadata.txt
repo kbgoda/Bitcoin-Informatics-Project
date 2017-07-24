@@ -1,0 +1,9 @@
+Date
+LTCBTC
+open
+high
+low
+close
+vol_btc
+vol_aud
+weighted_price
